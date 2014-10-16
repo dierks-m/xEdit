@@ -38,12 +38,12 @@ local scm = {
 
 local prg = {
     fl = {
-        apis = "/_xedit/apis/";
-        proj = "/_xedit/projects/";
-        dumps = "/_xedit/dumps/";
-        schemes = "/_xedit/schemes/";
-        config = "/_xedit/config";
-        crash = "/_xedit/crash/";
+        apis = "/.xedit/apis/";
+        proj = "/.xedit/projects/";
+        dumps = "/.xedit/dumps/";
+        schemes = "/.xedit/schemes/";
+        config = "/.xedit/config";
+        crash = "/.xedit/crash/";
     };
 
     xPos = 1;
