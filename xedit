@@ -148,6 +148,13 @@ local function writeFile( text, path )
     path = resolvePath( path )
 
     if not fs.isReadOnly( path ) then
+        local rawpath = path:match( "^.+/" )
+
+        if not fs.exists( rawpath ) or not fs.isDir( rawpath ) then
+            fs.delete( rawpath )
+            fs.makeDir( rawpath )
+        end
+
         local f = fs.open( path, "w" )
 
         if f then
@@ -392,7 +399,7 @@ local function initialize()
     }, {
         file = {
             { "save", "Save" };
-            { "pastebin", "pastebin"};
+            { "pastebin", "Pastebin"};
             { "saveExit", "Save & Exit" };
             { "exit", "Exit" };
         };
@@ -779,7 +786,7 @@ local function startScreen()
 
     local mainMenu, pastebinMenu = {
         input = prg.gui.read( { x1=4; x2=x-3; y1=5; bg=scm.startbg; fg=scm.starttxt } );
-        pastebin = prg.gui.button( { x1=2; x2=x-2; y1=12; y2=14; bg=scm.startbut; txt={ { txt="Open from pastebin"; pos="l"; fg=scm.startbuttxt } } } );
+        pastebin = prg.gui.button( { x1=2; x2=x-2; y1=12; y2=14; bg=scm.startbut; txt={ { txt="Open from Pastebin"; pos="l"; fg=scm.startbuttxt } } } );
         exit = prg.gui.button( { x1=2; x2=x-2; y1=16; y2=18; bg=scm.starbutexit; txt={ { txt="Exit"; pos="l"; fg=scm.startbuttxt } } } );
     }, {
         file = prg.gui.read( { x1=4; x2=x-3; y1=5; bg=scm.startbg; fg=scm.starttxt } );
@@ -817,7 +824,7 @@ local function startScreen()
 
     local function drawPastebin()
         prg.gui.advPrint( "Specify path", 9, "c", 1, x-1)
-        prg.gui.advPrint( "pastebin ID", 9, "c", x+1, prg.xSize )
+        prg.gui.advPrint( "Pastebin ID", 9, "c", x+1, prg.xSize )
         prg.gui.rectangle( 3, 7, x-3, 7, scm.startbg, "-", scm.starttxt )
         prg.gui.rectangle( x+3, 7, prg.xSize-2, 7, scm.startbg, "-", scm.starttxt )
         term.setCursorPos( 3, 5 )
