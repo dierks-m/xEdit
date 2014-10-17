@@ -148,9 +148,9 @@ local function writeFile( text, path )
     path = resolvePath( path )
 
     if not fs.isReadOnly( path ) then
-        local rawpath = path:sub( 2 ):match( "^.+/?" )
+        local rawpath = path:match( "^.+/" )
 
-        if not fs.exists( rawpath ) or not fs.isDir( rawpath ) then
+        if rawpath and not fs.exists( rawpath ) or not fs.isDir( rawpath ) then
             fs.delete( rawpath )
             fs.makeDir( rawpath )
         end
