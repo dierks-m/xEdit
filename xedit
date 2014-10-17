@@ -266,8 +266,10 @@ end
 
 local function findString( txt, char )
     if txt:sub( 1, 1 ) == char and #txt > 1 then
-        for i = 2, #txt do
-            if txt:sub( i, i ) == char and ( txt:sub( i-1, i-1 ) ~= "\\" or txt:sub( i-2, i-1 ) == "\\\\" ) then
+        local sub = txt:gsub( "\\\\", "  " )
+
+        for i = 2, #sub do
+            if sub:sub( i, i ) == char and sub:sub( i-1, i-1 ) ~= "\\" then
                 return txt:sub( 1, i )
             end
         end
@@ -1093,7 +1095,10 @@ local function main()
         handleEvents( e, width )
 
         if e[1] == "char" then
-            local forceWhole, cancel, currChar = nil, nil, prg.file[prg.yScroll+prg.yPos]:sub( prg.xScroll+prg.xPos, prg.xScroll+prg.xPos )
+            local forceWhole, cancel, currChar, prevChar = nil,
+                nil,
+                prg.file[prg.yScroll+prg.yPos]:sub( prg.xScroll+prg.xPos, prg.xScroll+prg.xPos ),
+                prg.file[prg.yScroll+prg.yPos]:sub( prg.xScroll+prg.xPos-1, prg.xScroll+prg.xPos-1 )
 
             if prg.sel.x1 ~= 0 then
                 deleteSelection()
@@ -1101,10 +1106,10 @@ local function main()
             end
 
             for k, v in pairs( prg.autoComplete ) do
-                if currChar == v and e[2] == v then
+                if currChar == v and e[2] == v and prevChar ~= "\\" then
                     cancel = true
                     break
-                elseif e[2] == k then
+                elseif e[2] == k and prevChar ~= "\\" then
                     e[2] = e[2] .. v
                     break
                 end
