@@ -421,7 +421,7 @@ local function initialize()
             { "gotoend"; "Go To End" };
         };
 
-        run = {
+        nyi = {
             { "run"; "Run Program" };
             { "runArgs", "Run w/ args" };
         };
