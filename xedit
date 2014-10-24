@@ -14,7 +14,7 @@ local scm = {
     txt = 1;
     cmt = 32;
     con = 2;
-    func = 8;
+    func = 2048;
     str = 16384;
     sta = 512;
     selLn = 256;
@@ -131,6 +131,14 @@ local prg = {
         "for%s+.+%s+do%s*$";
         "repeat%s*$";
         "function%s+[%w_]*%s*%(.*%)%s*$";
+        "else";
+        "elseif%s*.+%s+then%s*$";
+    };
+
+    deIndent = {
+        "end";
+        "else";
+        "elseif%s+.+%s+then";
     };
 
     hitmap = {
@@ -233,8 +241,7 @@ local function pastebin( arg )
                 "http://www.pastebin.com/api/api_post.php",
                 "api_option=paste&api_dev_key=65ea67d061b102aa026db0f77a948b01" ..
                 "&api_paste_format=lua&api_paste_name=" .. textutils.urlEncode( arg.name ) ..
-                "&api_paste_code=" .. textutils.urlEncode( formatText( arg.txt ) ) ..
-                "&api_paste_expire_date=10M"
+                "&api_paste_code=" .. textutils.urlEncode( formatText( arg.txt ) )
             )
 
             if response then
@@ -821,7 +828,7 @@ local function runProgram( file, ... )
         if cErr then
             return false, cErr
         else
-            print( "Press any key or click to return to luaedit" )
+            print( "Press any key or click to return to xEdit" )
 
             while true do
                 local e = { coroutine.yield() }
@@ -1116,7 +1123,19 @@ local function main()
             end
 
             if not cancel then
-                prg.file[prg.yPos+prg.yScroll] = prg.file[prg.yPos+prg.yScroll]:sub( 1, prg.xPos+prg.xScroll-1 ) .. e[2] .. prg.file[prg.yPos+prg.yScroll]:sub( prg.xPos+prg.xScroll )
+                local line = prg.file[prg.yScroll+prg.yPos]:sub( 1, prg.xScroll+prg.xPos-1 )
+                    .. e[2]
+                    .. prg.file[prg.yScroll+prg.yPos]:sub( prg.xScroll+prg.xPos )
+
+
+                for k, v in pairs( prg.deIndent ) do
+                    if line:match( v ) then
+                        local deIndentation = math.min( prg.tabWidth, #line:match( "^%s*" ) )
+                        line = line:sub( deIndentation+1 )
+                    end
+                end
+
+                prg.file[prg.yScroll+prg.yPos] = line
             end
 
             setCursor( prg.xPos+prg.xScroll+1, false, true, forceWhole )
@@ -1174,7 +1193,10 @@ local function main()
                 end
 
                 for k, v in pairs( prg.autoIndent ) do
-                    if prg.file[prg.yScroll+prg.yPos]:match( v ) and prg.xScroll+prg.xPos == #prg.file[prg.yScroll+prg.yPos]+1 then
+                    if prg.file[prg.yScroll+prg.yPos]:match( v )
+                    and prg.xScroll+prg.xPos == #prg.file[prg.yScroll+prg.yPos]+1
+                    and not prg.file[prg.yScroll+prg.yPos]:match( "end" )
+                    and not prg.file[prg.yScroll+prg.yPos]:match( "until%s+.+" ) then
                         addIndent = prg.tabWidth
                         break
                     end
