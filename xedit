@@ -131,6 +131,9 @@ local prg = {
         "for%s+.+%s+do%s*$";
         "repeat%s*$";
         "function%s+[%w_]*%s*%(.*%)%s*$";
+    };
+
+    specialIndent = {
         "else";
         "elseif%s*.+%s+then%s*$";
     };
@@ -139,6 +142,7 @@ local prg = {
         "end";
         "else";
         "elseif%s+.+%s+then";
+        "until%s+.+";
     };
 
     hitmap = {
@@ -619,6 +623,40 @@ local function drawSelec( state )
         term.write( " " )
         prg.selecDrawn = false
     end
+end
+
+local function searchCond( ln, arg )
+    local searchFor, pos = nil, 1
+
+    if arg == "until%s+.+" then
+        searchFor = "repeat"
+    end
+
+    for i = ln-1, 1, -1 do
+        if searchFor and prg.file[i]:match( searchFor ) then
+            return prg.file[i]:match( "^%s*" )
+        else
+            for k, v in pairs( prg.deIndent ) do
+                if prg.file[i]:match( v ) then
+                    pos = pos + 1
+                    break
+                end
+            end
+
+            for k, v in pairs( prg.autoIndent ) do
+                if prg.file[i]:match( v ) then
+                    pos = pos - 1
+                end
+
+                if pos == 0 then
+                    return prg.file[i]:match( "^%s*" )
+                end
+            end
+        end
+        sleep(0.05)
+    end
+
+    return prg.file[pos]:match( "^%s*" )
 end
 
 local function handleEvents( arg, width, timerOnly )
@@ -1130,8 +1168,8 @@ local function main()
 
                 for k, v in pairs( prg.deIndent ) do
                     if line:match( v ) then
-                        local deIndentation = math.min( prg.tabWidth, #line:match( "^%s*" ) )
-                        line = line:sub( deIndentation+1 )
+                        line = searchCond( prg.yScroll+prg.yPos, v ) .. line:match( "^%s*(.*)" )
+                        break
                     end
                 end
 
@@ -1193,6 +1231,16 @@ local function main()
                 end
 
                 for k, v in pairs( prg.autoIndent ) do
+                    if prg.file[prg.yScroll+prg.yPos]:match( v )
+                    and prg.xScroll+prg.xPos == #prg.file[prg.yScroll+prg.yPos]+1
+                    and not prg.file[prg.yScroll+prg.yPos]:match( "end" )
+                    and not prg.file[prg.yScroll+prg.yPos]:match( "until%s+.+" ) then
+                        addIndent = prg.tabWidth
+                        break
+                    end
+                end
+
+                for k, v in pairs( prg.specialIndent ) do
                     if prg.file[prg.yScroll+prg.yPos]:match( v )
                     and prg.xScroll+prg.xPos == #prg.file[prg.yScroll+prg.yPos]+1
                     and not prg.file[prg.yScroll+prg.yPos]:match( "end" )
