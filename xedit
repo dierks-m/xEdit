@@ -348,7 +348,7 @@ end
 local function writeLine( y1, bg )
     local txt = prg.file[y1]
 
-    while #txt > 0 do
+    while #txt > 0 and #prg.file[y1]-#txt <= prg.xScroll+prg.xSize do
         txt =
         writePart( txt, "^%-%-%[%[.-%]%]", scm.cmt, y1, bg ) or
         writePart( txt, "^%-%-.*", scm.cmt, y1, bg ) or
