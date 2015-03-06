@@ -489,7 +489,7 @@ local function setCursor( x1, y1, forceLine, forceWhole, forceHidden, forceAll )
         elseif y1 > prg.yScroll+prg.ySize-prg.offTop then
             prg.yPos = math.min( #prg.file, prg.ySize-prg.offTop )
             prg.yScroll = math.min( y1, #prg.file )-prg.yPos
-            wholeRefresh = change ~= prg.yScroll+prg.yPos == y1
+            wholeRefresh = change ~= ( prg.yScroll+prg.yPos == y1 )
         else
             local oldPos = prg.yPos
             prg.yPos = math.min( y1-prg.yScroll, #prg.file-prg.yScroll )
