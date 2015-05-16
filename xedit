@@ -653,7 +653,6 @@ local function searchCond( ln, arg )
                 end
             end
         end
-        sleep(0.05)
     end
 
     return prg.file[pos]:match( "^%s*" )
