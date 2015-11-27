@@ -214,7 +214,9 @@ local function getTable( path )
 end
 
 local function loadAPI( path )
-    local func, err = loadfile( resolvePath( path ) )
+    local f = fs.open( resolvePath( path ), "r" ) or { readAll = function() return "" end; close = function() end }
+    local func, err = loadstring( f.readAll() )
+    f.close()
 
     if func then
         local env = {}
