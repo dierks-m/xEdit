@@ -1289,7 +1289,7 @@ local function main()
                 setCursor( prg.xPos+prg.xScroll-1 )
             elseif e[2] == keys.right then
                 setCursor( prg.xPos+prg.xScroll+1 )
-            elseif e[2] == keys.end then
+            elseif e[2] == keys[ "end" ] then
                 setCursor( #prg.file[prg.yScroll+prg.yPos]+1 )
             elseif e[2] == keys.down then
                 setCursor( prg.xScroll+prg.xPos, prg.yScroll+prg.yPos+1, false, false, false, true )
