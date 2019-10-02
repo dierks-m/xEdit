@@ -1179,7 +1179,7 @@ local function main()
 
             setCursor( prg.xPos+prg.xScroll+1, false, true, forceWhole )
         elseif e[1] == "key" then
-            if e[2] == 14 then
+            if e[2] == keys.backspace then
                 if prg.sel.x1 ~= 0 then
                     deleteSelection()
                     setCursor( prg.xScroll+prg.xPos, false, false, true )
@@ -1206,7 +1206,7 @@ local function main()
                     table.remove( prg.file, prg.yScroll+prg.yPos )
                     setCursor( oldLength, prg.yScroll+prg.yPos-1, false, true )
                 end
-            elseif e[2] == 15 then
+            elseif e[2] == keys.tab then
                 local forceWhole, spaces, sub = nil, #prg.file[prg.yScroll+prg.yPos]:match( "^%s*" )%prg.tabWidth
 
                 if prg.sel.x1 ~= 0 then
@@ -1223,8 +1223,7 @@ local function main()
                     prg.ev.shortcutShift = nil
                     setCursor( prg.xScroll+prg.xPos-spaces+1, false, true, forceWhole )
                 end
-            elseif e[2] == 28 then
-
+            elseif e[2] == keys.enter then
                 local addIndent = 0
 
                 if prg.sel.x1 ~= 0 then
@@ -1260,19 +1259,19 @@ local function main()
 
                 prg.file[prg.yScroll+prg.yPos] = prg.file[prg.yScroll+prg.yPos]:sub( 1, prg.xScroll+prg.xPos-1 )
                 setCursor( spaces+1, prg.yScroll+prg.yPos+1, false, true )
-            elseif e[2] == 29 or e[2] == 157 then
+            elseif e[2] == keys.leftCtrl or e[2] == keys.rightCtrl then
                 prg.ev.shortcutCtrl = os.startTimer( prg.shortcutInt )
-            elseif e[2] == 42 then
+            elseif e[2] == keys.leftShift then
                 prg.ev.shortcutShift = os.startTimer( prg.shortcutInt )
-            elseif e[2] == 45 and prg.ev.shortcutCtrl then
+            elseif e[2] == keys.x and prg.ev.shortcutCtrl then
                 copySelection()
                 deleteSelection()
                 editGUI()
                 prg.ev.shortcutCtrl = nil
-            elseif e[2] == 46 and prg.ev.shortcutCtrl then
+            elseif e[2] == keys.c and prg.ev.shortcutCtrl then
                 copySelection()
                 prg.ev.shortcutCtrl = nil
-            elseif e[2] == 48 and prg.ev.shortcutCtrl then
+            elseif e[2] == keys.b and prg.ev.shortcutCtrl then
                 pasteSelection()
                 editGUI()
                 prg.ev.shortcutCtrl = nil
@@ -1284,15 +1283,15 @@ local function main()
                 else
                     setCursor( 1 )
                 end
-            elseif e[2] == 200 then
+            elseif e[2] == keys.up then
                 setCursor( prg.xScroll+prg.xPos, prg.yScroll+prg.yPos-1, false, false, false, true )
-            elseif e[2] == 203 then
+            elseif e[2] == keys.left then
                 setCursor( prg.xPos+prg.xScroll-1 )
-            elseif e[2] == 205 then
+            elseif e[2] == keys.right then
                 setCursor( prg.xPos+prg.xScroll+1 )
-            elseif e[2] == 207 then
+            elseif e[2] == keys.end then
                 setCursor( #prg.file[prg.yScroll+prg.yPos]+1 )
-            elseif e[2] == 208 then
+            elseif e[2] == keys.down then
                 setCursor( prg.xScroll+prg.xPos, prg.yScroll+prg.yPos+1, false, false, false, true )
             elseif e[2] == 211 then
                 if prg.sel.x1 ~= 0 then
