@@ -141,7 +141,7 @@ function read( arg )
                     self:setCursor( self.pos+self.cursor-1 )
                 elseif e[2] == keys.left then
                     self:setCursor( self.pos+self.cursor+1 )
-                elseif e[2] == keys.end then
+                elseif e[2] == keys["end"] then
                     self:setCursor( #self.txt+1 )
                 elseif e[2] == keys.delete then
                     self.txt = self.txt:sub( 1, self.pos+self.cursor-1 ) .. self.txt:sub( self.pos+self.cursor+1 )
