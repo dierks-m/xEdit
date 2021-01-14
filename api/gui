@@ -139,7 +139,7 @@ function read( arg )
                     self:setCursor( 1 )
                 elseif e[2] == keys.right then
                     self:setCursor( self.pos+self.cursor-1 )
-                elseif e[2] == left then
+                elseif e[2] == keys.left then
                     self:setCursor( self.pos+self.cursor+1 )
                 elseif e[2] == keys.end then
                     self:setCursor( #self.txt+1 )
