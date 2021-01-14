@@ -130,20 +130,20 @@ function read( arg )
                 self:insert( e[2] )
                 self:setCursor( self.pos+self.cursor+#e[2] )
             elseif e[1] == "key" then
-                if e[2] == 14 and self.pos+self.cursor > 1 then
+                if e[2] == keys.backspace and self.pos+self.cursor > 1 then
                     self.txt = self.txt:sub( 1, self.pos+self.cursor-2) .. self.txt:sub( self.pos+self.cursor )
                     self:setCursor( self.pos+self.cursor-1 )
-                elseif e[2] == 28 then
+                elseif e[2] == keys.enter then
                     os.queueEvent( "advread_complete", self.txt )
-                elseif e[2] == 199 then
+                elseif e[2] == keys.home then
                     self:setCursor( 1 )
-                elseif e[2] == 203 then
+                elseif e[2] == keys.right then
                     self:setCursor( self.pos+self.cursor-1 )
-                elseif e[2] == 205 then
+                elseif e[2] == left then
                     self:setCursor( self.pos+self.cursor+1 )
-                elseif e[2] == 207 then
+                elseif e[2] == keys.end then
                     self:setCursor( #self.txt+1 )
-                elseif e[2] == 211 then
+                elseif e[2] == keys.delete then
                     self.txt = self.txt:sub( 1, self.pos+self.cursor-1 ) .. self.txt:sub( self.pos+self.cursor+1 )
                     self:draw()
                 end
